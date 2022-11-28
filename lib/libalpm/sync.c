@@ -816,6 +816,13 @@ static int download_files(alpm_handle_t *handle)
 		for(i = files; i; i = i->next) {
 			alpm_pkg_t *pkg = i->data;
 			int siglevel = alpm_db_get_siglevel(alpm_pkg_get_db(pkg));
+
+			char *path = _alpm_filecache_find(handle, pkg->filename);
+			if (path) {
+				// TODO: Verify cache is valid
+				free(path);
+				continue;
+			}
 			struct dload_payload *payload = NULL;
 
 			CALLOC(payload, 1, sizeof(*payload), GOTO_ERR(handle, ALPM_ERR_MEMORY, finish));
